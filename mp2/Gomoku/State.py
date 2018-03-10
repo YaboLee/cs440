@@ -3,9 +3,10 @@ import copy
 
 class State(object):
 #     Initialize a board and initial state;
-    def __init__(self):
+    def __init__(self, current_player):
         self.board = Board()
-        self.move = (self.board.dimension//2, self.board.dimension//2)
+        # self.move = (self.board.dimension//2, self.board.dimension//2)
+        self.current = current_player
 
     def artificial_state(self, number):
         self.board.artificial_board(number)
@@ -13,7 +14,7 @@ class State(object):
 
         # Create a new state with move and player;
     def new_state(self, move, player):
-        new = State()
+        new = State(player)
         new.board = copy.deepcopy(self.board)
         new.move = new.board.make_move(move, player)
         if new.move == (-1, -1):

@@ -5,9 +5,9 @@ from State import *
 class Gomoku(object):
     # Always start with player_one, red symbol;
     def __init__(self, player_one, player_two):
-        self.state = State()
-        self.player_one = Player(player_one, symbol="r")
-        self.player_two = Player(player_two, symbol="b")
+        self.state = State(player_one) # initial state, current player is player_one;
+        self.player_one = Player(player_one, first_or_second=1)
+        self.player_two = Player(player_two, first_or_second=2)
         self.winner = None
         self.current = self.player_one
         self.oponent = self.player_two

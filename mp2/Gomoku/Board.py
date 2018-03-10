@@ -5,6 +5,7 @@ class Board(object):
     def __init__(self, dimension=7):
         self.dimension = dimension
         self.board = {}
+        self.chain = {} # open_row3, broken_row3, open_row2, broken_row2, open
 #         Initialize the board;
         for row in range(dimension):
             for col in range(dimension):
@@ -25,7 +26,7 @@ class Board(object):
 #     Player is an object;
     def make_move(self, move, player):
         if self.is_valid_move(move):
-            self.board[move] = player.symbol
+            self.board[move] = player.symbol.pop(0)
             return move
         else:
             return (-1, -1)
@@ -56,3 +57,5 @@ class Board(object):
                 if self.board[(row, col)] == ".":
                     valids.append((row, col) )
         return valids
+
+    
