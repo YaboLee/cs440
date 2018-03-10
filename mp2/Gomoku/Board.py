@@ -13,12 +13,12 @@ class Board(object):
     def artificial_board(self, number):
         if number == 1:
             self.board[(2, 0)] = "r"
-            
+
 
     def print_board(self):
         for row in range(self.dimension):
             for col in range(self.dimension):
-                print(self.board[(row, col)], end=" " )
+                print(self.board[(row, col)], end="   " )
             print("\n")
 
 #     Move must be a tuple;

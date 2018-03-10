@@ -1,6 +1,6 @@
 import Reflex
-import Minimax
-import Alphabeta
+# import Minimax
+# import Alphabeta
 
 class Player(object):
 #     Name determines evaluation function;
@@ -11,7 +11,7 @@ class Player(object):
 
 #     According to the type of player, determine next move;
     def get_move(self, board):
-        if self.name == "agent":
+        if self.name == "reflex":
             return Reflex.evaluate(board, self.symbol)
 
         if self.name == "minimax":

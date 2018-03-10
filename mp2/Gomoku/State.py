@@ -1,4 +1,4 @@
-import Board
+from Board import *
 import copy
 
 class State(object):
@@ -16,7 +16,7 @@ class State(object):
         new = State()
         new.board = copy.deepcopy(self.board)
         new.move = new.board.make_move(move, player)
-        if new.move = (-1, -1):
+        if new.move == (-1, -1):
             return None
         return new
 

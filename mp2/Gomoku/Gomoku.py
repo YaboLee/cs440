@@ -1,6 +1,6 @@
-import Board
-import Player
-import State
+from Board import *
+from Player import *
+from State import *
 
 class Gomoku(object):
     # Always start with player_one, red symbol;
@@ -23,13 +23,13 @@ class Gomoku(object):
         self.state.artificial_state(number)
         self.current = self.player_two
         self.oponent = self.player_one
-        self.board.print_board()
+        self.state.board.print_board()
 
         move = self.current.get_move(self.state.board)
         new_state = self.new_state(move, self.current)
 
         self.state.board.print_board()
-        
+
 
 
     def play_with_reflex(self, first):
