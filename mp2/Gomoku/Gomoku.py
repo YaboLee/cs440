@@ -26,9 +26,9 @@ class Gomoku(object):
         self.state.board.print_board()
 
         move = self.current.get_move(self.state.board)
-        new_state = self.new_state(move, self.current)
-
-        self.state.board.print_board()
+        new_state = self.state.new_state(move, self.current)
+        new_state.board.print_board()
+        # self.state.board.print_board()
 
 
 

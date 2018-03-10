@@ -16,9 +16,9 @@ class Board(object):
 
 
     def print_board(self):
-        for row in range(self.dimension):
+        for row in range(self.dimension-1, -1, -1):
             for col in range(self.dimension):
-                print(self.board[(row, col)], end="   " )
+                print(self.board[(col, row)], end="   " )
             print("\n")
 
 #     Move must be a tuple;
