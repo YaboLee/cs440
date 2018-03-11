@@ -10,7 +10,7 @@ class Gomoku(object):
         self.player_two = Player(player_two, first_or_second=2)
         self.winner = None
         self.current = self.player_one
-        self.oponent = self.player_two
+        self.opponent = self.player_two
 
     def is_over(self):
         # If there is a winner or no avaliable moves;
@@ -25,7 +25,8 @@ class Gomoku(object):
         self.oponent = self.player_one
         self.state.board.print_board()
 
-        move = self.current.get_move(self.state.board)
+        move = self.current.get_move(self.state.board, self.opponent)
+        print(move)
         new_state = self.state.new_state(move, self.current)
         new_state.board.print_board()
         # self.state.board.print_board()
