@@ -17,7 +17,8 @@ class Digit(object):
         self.tokens = []
         self.matrix_one = np.zeros((32, 32))
         self.matrix_zero = np.zeros((32, 32))
-
+        self.likelihoods_zero = np.zeros((32, 32))
+        self.likelihoods_one = np.zeros((32, 32))
 
     def add_token(self, image):
         '''
@@ -45,7 +46,10 @@ class Digit(object):
         '''
         print(self.tokens[index])
 
-    def calculate_frequency_matrix(self):
+    def number_of_tokens(self):
+        return len(self.tokens)
+
+    def frequency_matrix(self):
         '''
             Calculate the # of times pixel (i, j) has value 0/1
             return two matrice
@@ -58,3 +62,13 @@ class Digit(object):
                     else:
                         self.matrix_zero[i][j] += 1
         return self.matrix_zero, self.matrix_one
+
+    def likelihoods(self, laplace=0):
+        V = len(self.tokens)
+        self.likelihoods_zero = self.matrix_zero
+        self.likelihoods_one = self.matrix_one
+
+        self.likelihoods_zero = (self.likelihoods_zero + laplace) / (laplace*V + V)
+        self.likelihoods_one  = (self.likelihoods_one + laplace) / (laplace*V + V)
+
+        return self.likelihoods_zero, self.likelihoods_one
