@@ -2,6 +2,7 @@ from loaddata import *
 import numpy as np
 import math
 
+np.set_printoptions(threshold=np.nan, precision=2)
 
 training_data = load_training()
 testing_data = load_testing()
@@ -19,31 +20,87 @@ class NB(object):
             posteriori is a dictionary of posteriori probability of each digit.
                 key: digit index
                 value: probability
+            accuracy is the evaluation for the classification for each digit.
+                key: digit index
+                value: percentage of accuracy
         '''
         self.training_data = training_data
         self.testing_data = testing_data
         self.priors = {}
-
+        self.likelihoods_zero = {}
+        self.likelihoods_one = {}
         self.posteriori = {}
+        self.accuracy = {}
 
     def calculate_priors(self):
         '''
             Calculate priors probability for each digit, according to training_data set.
+            To make life easier, log them.
         '''
         total_count = 0
-        for index, object in self.training_data.items():
-            self.priors[index] = object.number_of_tokens()
-            total_count += object.number_of_tokens()
+        for index, digit_object in self.training_data.items():
+            self.priors[index] = digit_object.number_of_tokens()
+            total_count += digit_object.number_of_tokens()
         for k, v in self.priors.items():
             self.priors[k] /= total_count
+            self.priors[k] = math.log(self.priors[k])
         return self.priors
 
-    def calculate_posteriori(self):
+    def all_likelihoods(self):
         '''
-            Calculate posteriori probability for each digit.
-                likelihoods are calculated by method of digit object.
+            Obtain the likehoods from the training data set.
+            First loop: obtain the matrix of likelihoods for each digit.
+            Second & Third loop: log them.
         '''
-        for index, object in self.training_data.items():
-            likelihoods_zero, likelihoods_one = object.priors()
-            self.posteriori[index] = np.log(likelihoods_one).sum() + math.log1p(self.priors[index])
-        return self.posteriori
+        self.calculate_priors()
+        for class_idx, class_obj in self.training_data.items():
+            self.likelihoods_zero[class_idx], self.likelihoods_one[class_idx] = class_obj.likelihoods(1)
+            # print(self.likelihoods_zero[class_idx])
+        for k, v in self.likelihoods_zero.items():
+            self.likelihoods_zero[k] = np.log(v)
+        for k, v in self.likelihoods_one.items():
+            self.likelihoods_one[k] = np.log(v)
+        # self.likelihoods_zero = np.log(self.likelihoods_zero)
+        # self.likelihoods_one = np.log(self.likelihoods_one)
+
+    def calculate_posteriori(self, image, digit):
+        '''
+            Posteriori:
+                P(class|observed) = log(prior) + log(specific likelihood)
+            Given digit(prior), calclulate posteriori for this image.
+                Observation is this image. To be specific, each pixel.
+        '''
+        posteriori = self.priors[digit]
+        # print(self.priors)
+        for (x, y), value in np.ndenumerate(image):
+            if value == 0:
+                posteriori += self.likelihoods_zero[digit][x][y]
+            else:
+                posteriori += self.likelihoods_one[digit][x][y]
+        # print(posteriori)
+        return posteriori
+
+    def MAP_evaluation(self, image):
+        '''
+            For one image, what is the posteriori of each image? Return the greatest prediction.
+        '''
+        posteriori_list = []
+        # for image in self.testing_data[digit].tokens:
+        for digit in range(10):
+            posteriori_list.append(self.calculate_posteriori(image, digit))
+        return np.argmax(np.array(posteriori_list) )
+
+    def confusion_matrix(self):
+        self.all_likelihoods()
+        confusion_matrix = np.zeros((10, 10))
+        for class_idx, obj_idx in self.testing_data.items():
+            prediction_count = np.zeros(10)
+            for image in obj_idx.tokens:
+                prediction = self.MAP_evaluation(image)
+                prediction_count[prediction] += 1
+            # prediction_count = np.array(prediction_count)
+            # print(prediction_count)
+            prediction_percent = prediction_count / prediction_count.sum()
+            confusion_matrix[class_idx] = prediction_percent
+        print(confusion_matrix)
+        return confusion_matrix

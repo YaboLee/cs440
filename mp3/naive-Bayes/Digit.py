@@ -61,13 +61,15 @@ class Digit(object):
                         self.matrix_one[i][j] += 1
                     else:
                         self.matrix_zero[i][j] += 1
+        # print(self.matrix_one)
         return self.matrix_zero, self.matrix_one
 
-    def likelihoods(self, laplace=0):
+    def likelihoods(self, laplace=0.1):
         '''
             Calculate the matrix of likelihoods for the class
             return two matrice.
         '''
+        self.frequency_matrix()
         V = len(self.tokens)
         self.likelihoods_zero = self.matrix_zero
         self.likelihoods_one = self.matrix_one
