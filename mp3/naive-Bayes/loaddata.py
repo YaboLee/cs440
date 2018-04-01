@@ -3,13 +3,6 @@ import pandas as pd
 from Digit import *
 
 
-# f = open("../digitdata/optdigits-orig_test.txt")
-# lines = f.readlines()
-#
-# for i in range(32, len(lines), 33):
-#     # print(i)
-#     print(lines[i])
-
 def load_training(filename="../digitdata/optdigits-orig_train.txt"):
     '''
         Load training data;

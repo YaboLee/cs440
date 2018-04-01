@@ -64,6 +64,10 @@ class Digit(object):
         return self.matrix_zero, self.matrix_one
 
     def likelihoods(self, laplace=0):
+        '''
+            Calculate the matrix of likelihoods for the class
+            return two matrice.
+        '''
         V = len(self.tokens)
         self.likelihoods_zero = self.matrix_zero
         self.likelihoods_one = self.matrix_one
