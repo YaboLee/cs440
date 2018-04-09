@@ -1,6 +1,8 @@
 from loaddata import *
 import numpy as np
 import math
+import matplotlib.pyplot as plt
+
 
 np.set_printoptions(threshold=np.nan, precision=2)
 
@@ -54,14 +56,12 @@ class NB(object):
         '''
         self.calculate_priors()
         for class_idx, class_obj in self.training_data.items():
-            self.likelihoods_zero[class_idx], self.likelihoods_one[class_idx] = class_obj.likelihoods(1)
+            self.likelihoods_zero[class_idx], self.likelihoods_one[class_idx] = class_obj.likelihoods(0.01)
             # print(self.likelihoods_zero[class_idx])
         for k, v in self.likelihoods_zero.items():
             self.likelihoods_zero[k] = np.log(v)
         for k, v in self.likelihoods_one.items():
             self.likelihoods_one[k] = np.log(v)
-        # self.likelihoods_zero = np.log(self.likelihoods_zero)
-        # self.likelihoods_one = np.log(self.likelihoods_one)
 
     def calculate_posteriori(self, image, digit):
         '''
@@ -104,3 +104,15 @@ class NB(object):
             confusion_matrix[class_idx] = prediction_percent
         print(confusion_matrix)
         return confusion_matrix
+
+    def odds_ratio(self, a, b):
+        self.all_likelihoods()
+        fig, ax = plt.subplots(1, 3)
+        pcm = ax[0].imshow(self.likelihoods_one[a], cmap="jet")
+        fig.colorbar(pcm, ax=ax[0])
+        pcm = ax[1].imshow(self.likelihoods_one[b], cmap="jet")
+        fig.colorbar(pcm, ax=ax[1])
+        pcm = ax[2].imshow(self.likelihoods_one[a]-self.likelihoods_one[b], cmap="jet")
+        fig.colorbar(pcm, ax=ax[2])
+        # fig.show()
+        plt.savefig("foo.png")
